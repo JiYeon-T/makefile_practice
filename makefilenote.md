@@ -129,9 +129,17 @@ $@ #目标
 @#	#代码端里面的注释, 不可以直接放在行末，必须重启一行
 #代码段里面的注释可以 @#
 #@ 不显示编译过程中的命令
+
 #(2)自己手动定义变量
 #= :=?= += 的区别
 #https://www.cnblogs.com/adorkable/p/13576987.html
+#= 读取完整个文件以后再把变量展开
+#:= 就是直接赋值, 不看后边的
+#？= 如果不存在就赋值 存在就什么都不干
+#+= 追加赋值
+CC=$(var)
+# CC=abc
+var=abc
 TARGET=first_make
 LIBS=-lpthread
 OBJS=first_make.o xdata.o
@@ -140,14 +148,33 @@ CXXFLAGS=-I./include	#系统自带变量寻找文件的路径
 #添加 类似于字符串
 cc=def
 cc+=abc	#def abc
+
+#(3)自动推理
 $(TARGET):first_make.cpp
 	$(CXX) $^ -o $@ -lpthread -std=c++11
-#(3)自动推理
 $(TARGET):first_make.o xdata.o
 	#自动推导 .o 文件
 #添加包含文件进行编译
 g++ -o first_make first_make.cpp xdata.cpp -I./include -std=c++11 -lpthread
 ```
+
+举个栗子:
+
+```makefile
+#如果使用直接赋值, DIR目录下还什么都没有
+DIR:=/home/uname/project/output
+FILES=$(shell find $(DIR) -type f)
+
+all:build1 build2 install
+	@echo "done"
+	
+install:
+	$(foreach out, $(FILES), $(call xx, $(strip $(out))))
+#假设DIR文件夹本来是空的，build1和build2过程会在DIR文件夹下产生文件（这里省略了build1和build2的具体内容），由于我们FILES变量使用的是延迟展开赋值，直到install过程的命令中才使用了这个变量，因此FILES变量会在这里进行展开，结果就是DIR下的所有文件。
+#如果FILES变量使用立即展开赋值，那么在一开始FILES就被展开了，此时还没有尽心build1、build2以及install的步骤，DIR下面是空的，所以FILES变量也为空。
+```
+
+
 
 (4)文件指示
 
