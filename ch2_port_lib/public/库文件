@@ -1,0 +1,13 @@
+# 1. 编译生成静态库
+gcc -c -o libpublic.a public.c
+
+
+# 2. 用户使用静态库需要实现这些 port 的接口
+# a. 直接包含库文件一起编译
+# gcc test.c port_api.c ./lib/libpublic.a
+
+# b.
+# -I 指定头文件路径
+# -L 指定库文件路径
+# -l 指定库文件
+# gcc -o test test.c port_api.c -I/home/qz/code/makefile_practice/ch2_port_lib/lib -L/home/qz/code/makefile_practice/ch2_port_lib/lib -lpublic
