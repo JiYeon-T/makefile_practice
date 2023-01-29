@@ -1,0 +1,2 @@
+C:/MinGW/bin/ar.exe qc libmath_test.a CMakeFiles/math_test.dir/src/math_test.c.obj
+C:/MinGW/bin/ranlib.exe libmath_test.a

@@ -1,0 +1,13 @@
+// the configured options and settings for tutorial
+// 会在 ${PROJECT_BUILD_DIR} 目录下生成一个 TutorialConfig.h 文件
+// cmake 搜索时，@Tutorial_VERSION_MAJOR@ 和 @Tutorial_VERSION_MINOR@ 将自动被设置好的版本号所替代
+// project(tutorial VERSION 2.3)
+// @${PROJECT_NAME}_VERSION_MAJOR@ 会被 CMakeLists.txt 中的变量 ${Tutorial_VERSION_MAJOR} 替代
+// @${PROJECT_NAME}_VERSION_MINOR@
+#define Tutorial_VERSION_MAJOR @Tutorial_VERSION_MAJOR@
+#define Tutorial_VERSION_MINOR @Tutorial_VERSION_MINOR@
+
+//compile DATE
+#define Tutorial_COMPILE_DATE @Tutorial_COMPILE_DATE@
+// 定义字符串类型宏定义的方法: "@VARIABLE@", VARIABLE 为 CMakeLists.txt 中定义的变量
+#define Tutorila_COMPILE_AUTH "@Tutorial_COMPILE_AUTH@"

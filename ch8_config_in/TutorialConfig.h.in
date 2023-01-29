@@ -1,0 +1,8 @@
+// 版本号宏定义
+#define Tutorial_VERSION_MAJOR @Tutorial_VERSION_MAJOR@
+#define Tutorial_VERSION_MINOR @Tutorial_VERSION_MINOR@
+
+
+
+// 打开 USE_MYMATH 宏, 如果要使用标准库的函数就关闭这个宏即可
+// #cmakedefine USE_MYMATH
