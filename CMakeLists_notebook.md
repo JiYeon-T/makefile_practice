@@ -1075,10 +1075,173 @@ add_definitions(-DFOO -DDEBUG)
 - add_subdirectory() 如果当前目录下还有子目录时，可以使用add_subdirectory,子目录中也需要包含有CMakeLists.txt
 
 ```cmake
-#dub_dir:指定包含CMakeLists.txt和源码文件的子目录的位置 
-#binary_dir:是输出路径，一般可以不指定 
+# sub_dir:指定包含CMakeLists.txt和源码文件的子目录的位置 
+# binary_dir:是输出路径，一般可以不指定 
 add_subdirectory(sub_dir [binary_dir])
 ```
+
+- set_directory_properties() 设置某个路径的一种属性
+
+```cmake
+set_directory_properties(PROPERITIES prop1 value1 prop2 value2)
+# prop1, prop2 取值范围INCLUDE_DIRECTORIES,LINK_DIRECTORIES,INCLUDE_REGULAR_EXPRESSION,ADDITIONNAL_MAKE_CLEAN_FILES
+# value1, value2
+```
+
+- set_property() 在给定的作用域内设置一个命名的属性
+
+```cmake
+set_property(<GLOBAL | DIRECTORY [dir] |
+TARGET [target...] |
+SOURCE [src1...] |
+TEST [test1...] |
+CACHE [entry1 ...]>
+[APPENT]
+PROPERTY <name> [value...])
+#PROPERTY 参数是必须的；第一个参数决定了属性可以影响的作用域：
+#GLOBAL:全局作用域
+#DIRECTORY:默认当前路径，也可以用[dir]指定路径
+#TARGET:目标作用域，可以是0个或多个已有目标
+#SOURCE:源文件作用域，可以是0个或多个源文件,源文件只对同目录有用
+#TEST:测试作用域，可以是0个或多个已有的测试
+#CACHE:必须指定0个或多个cache中已有的条目
+#如果源文件很多，把所有文件一个一个加入很麻烦，可以使用 aux_source_directory() 命令或 file() 命令，会查找指定目录下的所有源文件，然后将结果存进指定的变量名中。
+aux_source_directory(. SRC_LIST) # #查找当前目录多有源文件 并将名称到存到 ${SRC_LIST} 中，不能查找子目录
+# 也可以使用
+file(GLOB SRC_LIST *.c *.cpp) # 查找当前目录下的所有源文件，然后将结果存进指定的变量名中。
+```
+
+- add_library() **多目录多源文件处理**
+
+主目录：主目录中的 CMakeList.txt 中添加 add_subdirectory(child_lib) 命令，指明本项目包含一个子项目 child_lib 并在target_link_libraries() 指明本项目所需要链接一个名为 child_lib 的库
+
+子目录：子目录 child 中创建 CMakeLists.txt ，这里 child 编译为共享库
+
+主目录：
+
+```cmake
+cmake_minimum_required(VERSION 3.4.1)
+aux_source_directory(. SRC_LIST) # 当前目录所有源文件添加到列表 ${SRC_LIST}
+add_subdirectory(child) # 添加子目录 child 目录下的 CMakeLists.txt
+# 这里使用共享库
+add_library(
+	native_lib
+	SHARED
+	${SRC_LIST}
+)
+# 链接目标文件与共享库
+target_link_libraries(native_lib child)
+```
+
+子目录 child 中的 CMakeLists.txt:
+
+```cmake
+cmake_minimum_required(VERSION 3.4.1)
+# ${SRC_LIST} 的作用域仅在当前的 CMakeLists.txt
+aux_source_directory(. SRC_LIST) # 当前目录所有源文件添加到列表 ${SRC_LIST}
+# 生成动态库 native_lib
+add_library(native_lib
+	SHARED
+	${SRC_LIST}
+)
+```
+
+- **项目中添加预先编译好的库文件**
+
+假如项目中引入了 libimported-lib.so
+
+ 假如项目中引入了libimported-lib.so
+
+(1) 使用add_library() 命令:
+
+第一个参数是模块名，
+
+第二个参数 SHARED 表示动态库（如果是静态库则修改为 STATIC），
+
+第三个参数IMPORTED表示以导入的形式添加
+
+(2) 添加 set_target_properties() 命令设置导入路径属性到 target_link_libraries() 命令参数中，表示 native-lib 需要连接 imported-lib 模块
+
+方法1：
+
+```cmake
+cmake_minimum_required(VERSION 3.4.1)
+add_library(
+	imported-lib
+	SHARED # 如果是静态库则修改为 STATIC
+	IMPORTED # 使用IMPORTED标志告诉CMake 只希望将库导入到项目中
+)
+#参数分别为库、属性、导入地址、库所在地址
+set_target_properties(
+	imported-lib
+	PROPERTIES
+	IMPORTED_LOCATION
+	<路径>/libimported-lib.so
+)
+
+# 导入 native-lib 库, native-lib 有源代码, 自己生成库文件
+add_library(
+	native-lib
+	SHARED
+	${DIR_SRCS}
+)
+target_link_libraries(native-lib imported)
+```
+
+方法2:
+
+**为了确保CMake可以在编译时定位头文件，使用include_directories()，相当于g++选项中的-l参数。这样就可以使用#include<xx.h>，否则需要使用#include”path/xx.h”(相对路径)**
+
+```cmake
+cmake_minimum_required(VERSION 3.4.1)
+# 设置头文件目录
+# 相当于: g++ -I/usr/include，添加头文件搜索目录
+include_directories(<文件目录>)
+# 设置编译选项选项
+# 相当于 g++ -L/usr/lib，添加库文件所在目录
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -L[.so动态库所在目录]") # C
+set(CMAKE_CXX_FLAG "${CMAKE_CXX_FLAGS} -L[.so动态库所在目录]") # C++
+add_library(
+	native-lib
+	SHARED
+	${SRC_LIST}
+)
+target_link_libraries(native-lib imported)
+```
+
+build.gradle配置:
+
+```xml
+android { 
+	defaultConfig { 
+		externalNativeBuild { 
+			cmake { 
+				//使用编译器clang/gcc 
+				//cmake默认就是gnustl_static 
+				arguments "-DANDROID_TOOLCHAIN=clang","-DANDROID_STL=gnustl_static" 
+				//指定cflags和cppflags，效果和cmakelist使用一样 cppFlags "" cppFlags "" 
+				//指定需要编译的cpu架构 
+				abiFilters "armeabi-v7a" 
+			} 
+		} 
+	} 
+	externalNativeBuild { 
+		cmake { 
+			path "src/main/cpp/CMakeLists.txt" 
+			version "3.10.2" 
+		} 
+	} 
+}
+
+```
+
+**例子:一个简单的 C++ 项目写 CMakeLists.txt**
+
+使用AndoridStudio新建一个C++项目，系统会为我们建好一个CmakeLists.txt文件
+
+移植一个音频驱动库 -> ch0
+
+https://www.codercto.com/a/81311.html
 
 
 
@@ -1120,3 +1283,4 @@ file(TO_NATIVE_PATH path result)
 #NOTE:按照官方文档说法，不建议使用file的GLOB指令来收集工程的源文件。
 file(GLOB variable [RELATIVE path] [globbing expressions])
 ```
+
