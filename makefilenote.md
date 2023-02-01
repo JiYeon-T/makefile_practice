@@ -1,4 +1,9 @@
 #### 学习Makefile
+TODO:
+1.《跟我一起学makefile》 陈浩
+https://haoel.blog.csdn.net/article/details/2886
+
+
 
 **学习路线:**
 
@@ -66,17 +71,17 @@ first_make:first_make.cpp xdata.cpp
 -0[0, 1, 3] #优化级别
 -Dn[=definition] #向代码中传递宏定义
 -Idir #在编译源文件时，添加一个搜索头文件的额外目录，可以是多个 dir
-#eg:
--I.....
+-I/usr/local/include # eg:
+
 -Ldir #在编译源文件时,增加一个搜索库文件的额外目录
-#eg:
--L....
+-L/usr/local/lib
+
 -llibary #在编译链接文件时，添加一个额外的库:liblibary.so，
-#eg: 
--lpthread
+-lpthread #eg: 
+
 -Wwarning #允许产生 warnging 类型的信息,显示警告，最终版本会关闭警告
-#eg:
--Wall
+-Wall # 显示所有警告
+-Werror # 警告错误对待, 会导致编译报错
 ```
 
 查看 gcc 的工作流程:预处理 -> 编译 -> 汇编 -> 链接
@@ -192,7 +197,7 @@ first_make:first_make.cpp
 -fPIC	#位置无关的代码
 -shared	#
 g++ -shared -FPIC mylib.cpp -o libmylib.so
-g++ test.cpp -lmylib -L/root/cpp
+g++ test.cpp -lmylib -L/root/cpp -I/root/include
 #!bin/sh
 LD_LIBRART_PATH=./
 export LD_LIBRARY_PATH=./

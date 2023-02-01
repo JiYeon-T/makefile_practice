@@ -25,7 +25,8 @@ mytool:$(OBJS)
 # .PHONY是一个虚伪的目标文件
 # -rm mytool $(OBJS) 前面的-的意思是：也许中途会出现某些问题，但是不要理睬，继续执行后面的操作
 
-# include<filename>, makefile文件之间的包含关系
+# makefile文件之间的包含关系
+# include<filename>  包含子 makefile
 -include tool.mk
 
 .PHONY:clean
