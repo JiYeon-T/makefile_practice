@@ -1,0 +1,5 @@
+SRCS +=
+
+DEPPATH += --dep-path $(TOP_DIR)/src/module2
+VPATH += :$(TOP_DIR)/src/module2
+CFLAGS += "-I$(TOP_DIR)/src/module2"

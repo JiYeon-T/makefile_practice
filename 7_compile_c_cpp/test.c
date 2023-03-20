@@ -10,5 +10,7 @@ int main(void)
 //	printf("color = %d\n", color);
 	ReleaseInstance(&pApple);
 	assert(pApple == 0);
+
+
 	return 0;
 }

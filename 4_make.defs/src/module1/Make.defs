@@ -1,0 +1,7 @@
+SRCS += module1_1.c
+SRCS += module1_2.c
+SRCS += module1_3.c
+
+DEPPATH += --dep-path $(TOP_DIR)/src/module1
+VPATH += :$(TOP_DIR)/src/module1
+CFLAGS += "-I$(TOP_DIR)/src/module1"
