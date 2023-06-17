@@ -1,5 +1,5 @@
 # optimization
-# op1.Makefile 中的第一个目标文件 -> 最终的目标文件 -> 通过目标文件依赖的文件寻找其他需要的文件
+# step1.Makefile 中的第一个目标文件 -> 最终的目标文件 -> 通过目标文件依赖的文件寻找其他需要的文件
 # edit:main.o kbd.o command.o display.o insert.o search.o files.o utils.o
 # 	cc -o edit main.o kbd.o command.o display.o insert.o search.o files.o utils.o
 
