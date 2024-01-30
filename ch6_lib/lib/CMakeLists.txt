@@ -9,7 +9,7 @@ message("SRC_LIST:${SRC_LIST}")
 # add header file
 set(PUBLIC_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/include/math_test.h
-	)
+)
 
 # copy header files
 file(COPY ${PUBLIC_HEADER} DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/lib")

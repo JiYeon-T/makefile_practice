@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.23.0)
-project("ch5" VERSION 1.5)
+project(condition_cmake VERSION 1.5)
+# 条件构建 OPTION
+
 
 message("")
 message(STATUS "CMakeExpMaster")
@@ -24,6 +26,11 @@ else()
 	message(STATUS "NOT-TEST_OPTION OFF")
 endif()
 
+
 # 添加子工程
 add_subdirectory(sub)
-add_executable(${PROJECT_NAME} test.c)
+add_executable(${PROJECT_NAME}_bin test.c)
+target_include_directories(${PROJECT_NAME}_bin 
+	PUBLIC
+	${PROJECT_SOURCE_DIR}/include
+)

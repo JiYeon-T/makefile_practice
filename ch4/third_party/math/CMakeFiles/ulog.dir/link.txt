@@ -1,0 +1,2 @@
+/usr/bin/ar qc libulog.a CMakeFiles/ulog.dir/ulog_test.cpp.o
+/usr/bin/ranlib libulog.a

@@ -3,7 +3,9 @@
 ### CMakeList 学习笔记
 
 TODO:
-https://www.codercto.com/a/81311.html
+1. https://www.codercto.com/a/81311.html
+2. 在这个仓库, 创建一个用于学习 shell 的分支;
+
 
 
 cmake 是一个跨平台、开源的构建系统。它是一个集软件构建、测试、打包于一身的软件。它使用与平台和编译器独立的配置文件来对软件编译过程进行控制。

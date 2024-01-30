@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/Tutorial_bin.dir/main.cpp.o  -o build/Tutorial_bin -rdynamic 

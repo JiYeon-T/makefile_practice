@@ -1,3 +1,0 @@
-/home/qz/code/makefile_practice/ch1/CMakeFiles/edit_cache.dir
-/home/qz/code/makefile_practice/ch1/CMakeFiles/rebuild_cache.dir
-/home/qz/code/makefile_practice/ch1/CMakeFiles/Tutorial_bin.dir

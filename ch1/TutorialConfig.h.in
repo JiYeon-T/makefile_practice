@@ -1,13 +1,19 @@
 // the configured options and settings for tutorial
 // 会在 ${PROJECT_BUILD_DIR} 目录下生成一个 TutorialConfig.h 文件
+
+// 在 xxx.h.in 文件中定义宏时使用 CMakeLists.txt 中的变量:
 // cmake 搜索时，@Tutorial_VERSION_MAJOR@ 和 @Tutorial_VERSION_MINOR@ 将自动被设置好的版本号所替代
-// project(tutorial VERSION 2.3)
-// @${PROJECT_NAME}_VERSION_MAJOR@ 会被 CMakeLists.txt 中的变量 ${Tutorial_VERSION_MAJOR} 替代
-// @${PROJECT_NAME}_VERSION_MINOR@
-#define Tutorial_VERSION_MAJOR @Tutorial_VERSION_MAJOR@
-#define Tutorial_VERSION_MINOR @Tutorial_VERSION_MINOR@
+// Tutorial_VERSION_MAJOR_H 会被 CMakeLists.txt 中的变量 ${Tutorial_VERSION_MAJOR} 替代
+// 这些注释也会被复制到生成的头文件中
+// 这里的宏定义是整型
+#define Tutorial_VERSION_MAJOR_H @Tutorial_VERSION_MAJOR@
+#define Tutorial_VERSION_MINOR_H @Tutorial_VERSION_MINOR@
 
 //compile DATE
-#define Tutorial_COMPILE_DATE @Tutorial_COMPILE_DATE@
+// 这里定义为字符串
 // 定义字符串类型宏定义的方法: "@VARIABLE@", VARIABLE 为 CMakeLists.txt 中定义的变量
-#define Tutorila_COMPILE_AUTH "@Tutorial_COMPILE_AUTH@"
+#define Tutorial_COMPILE_DATE_INT @Tutorial_COMPILE_DATE@
+#define Tutorial_COMPILE_DATE_STR "@Tutorial_COMPILE_DATE@"
+#define Tutorila_COMPILE_AUTH_INT @Tutorial_COMPILE_AUTH@
+#define Tutorila_COMPILE_AUTH_STR "@Tutorial_COMPILE_AUTH@"
+

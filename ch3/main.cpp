@@ -4,7 +4,7 @@
 #include "math_sub.h"
 #include "math_div.h"
 #include "math_mul.h"
-#include "ch3Configure.h"
+#include "Ch3Configure.h"
 
 using namespace std;
 
@@ -17,11 +17,10 @@ int main(int argc, char *argv[])
 
     print_something();
 
-    int a = 1, b = 2;
-    cout << "result:" << my_add(a, b) << ", "
-         << my_sub(a, b) << ", "
-         << my_mul(a, b) << ", "
-         << my_div(a, b) << endl;
+    cout << "static library api:1+2=" << my_add(1, 2) << endl;
+    cout << "static library api:1-2=" << my_sub(1, 2) << endl;
+    cout << "static library api:1*2=" << my_mul(1, 2) << endl;
+    cout << "static library api:1/2=" << my_div(1, 2) << endl;
 
     return 0;
 }

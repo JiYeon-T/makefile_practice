@@ -6,8 +6,9 @@
 
 ##### 1. cmake
 - 在Android Studio2.2和以上版本，构建原生库的默认 工具 是CMake
-- CMake是一个跨平台的构建工具，可以使用简洁的语句来描述所有平台的安装(编译过程)。能够输出各种各样的makefile或者project文件。CMake并不直接构建出最终的软件，而是产生其他工具脚本比如makefile，然后在依据这个工具的构建方式使用。
-- CMake是一个比make更高级的编译配置工具，它可以根据不同的平台，不同的编译器，生成相应的makefile或者vcproj项目，从而达到跨平台的目的。Android Studio利用CMake生成的是ninja。ninja是一个小型的关注速度的构建系统。我们一般不需要关心ninja的脚本，只需要知道怎么配置CMake就行了
+- CMake是一个跨平台的构建工具，可以使用简洁的语句来描述所有平台的安装(编译过程)。能够输出各种各样的makefile或者project文件(**也可以生成其他格式的编译脚本**)。CMake 并不直接构建出最终的软件，而是产生其他工具脚本比如:makefile，然后在依据这个工具的构建方式使用。
+- CMake是一个比make更高级的编译配置工具，它可以根据不同的平台，不同的编译器，生成相应的makefile或者vcproj项目，从而达到跨平台的目的。
+Android Studio 利用 CMake 生成的是 ninja。ninja 是一个小型的关注速度的构建系统。我们一般不需要关心 ninja 的脚本，只需要知道怎么配置CMake就行了。
 - CMake是一个跨平台的支持产出各种不同的构建建脚本的一个工具。
 
 ##### 2.cmake 源文件

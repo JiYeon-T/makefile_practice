@@ -17,7 +17,13 @@
 # Kate - Unix Makefiles        = Generates Kate project files.
 # Sublime Text 2 - Ninja       = Generates Sublime Text 2 project files.
 # -B 编译文件存放目录
-# -S 
+# -S
+mkdir build
 cmake -G "Unix Makefiles" -B ./build -S ./
 cd build && make -j32
+
+
+# 编译方法:
+# 1. mkdir build && cd build; cmake ..; make
+# 2. ./build.sh
 
