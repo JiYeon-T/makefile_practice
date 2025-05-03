@@ -4,13 +4,13 @@ project(math)
 # 有个问题:子模块的编译文件会保存在当前文件, 而不是整个项目的 build 文件, 产生了多余的垃圾
 
 
-message("")
-message(STATUS "===================== math  module start ================")
+message(STATUS "\n\n===================== math  module start ================")
 
 # math 子模块编译成静态库
 message("PROJECT_SOURCE_DIR:" ${PROJECT_SOURCE_DIR})
 message("PROJECT_BINARY_DIR:" ${PROJECT_BINARY_DIR})
 
+# 收集源文件
 aux_source_directory(
     # ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}
@@ -22,10 +22,10 @@ add_library(math STATIC
     ${MATH_SRC_LIST}
 )
 
+# 添加头文件路径
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}
 )
 
-message(STATUS "===================== math  module end ================")
-message("")
+message(STATUS "===================== math  module end ================\n")

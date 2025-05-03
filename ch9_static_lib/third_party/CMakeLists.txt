@@ -18,16 +18,12 @@ include_directories(
 #message("dirs:${dirs}")
 
 
-message("SRC_LIST:${SRC_LIST}")
-message("INCLUDE_DIRECTORIES:${INCLUDE_DIRECTORIES}")
+message("opus lib SRC_LIST:" ${SRC_LIST})
+message("opus lib INCLUDE_DIRECTORIES:" ${INCLUDE_DIRECTORIES})
+message("module path:" ${CMAKE_MODULE_PATH})
 
 # 生成静态库 libopus.a
 add_library(${PROJECT_NAME} STATIC ${SRC_LIST} )
 
 # 同时拷贝头文件到 root cmake 的 build 目录下，这样 root cmake 只需要添加 ${RPJECT_BINARY_DIR} 就可以实现头文件搜索了
-
-
-# 移植库的时候如何改为调用自己的接口呢
-# 比如 malloc -> service_malloc()
-# free -> service_free()
 

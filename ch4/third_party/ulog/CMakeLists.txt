@@ -3,8 +3,7 @@
 # project(ulog VERSION 0.1)
 project(ulog)
 
-message("")
-message(STATUS "===================== ulog module start ================")
+message(STATUS "\n\n===================== ulog module start ================")
 
 # ulog 子模块编译成静态库
 
@@ -17,7 +16,7 @@ aux_source_directory(
     ULOG_SRC_LIST
 )
 
-# 生成 libulog.a
+# 生成静态库: libulog.so/libulog.dll
 add_library(ulog STATIC
     ${ULOG_SRC_LIST}
 )
@@ -27,5 +26,4 @@ include_directories(
     ${PROJECT_SOURCE_DIR}
 )
 
-message(STATUS "===================== ulog module end ================")
-message("")
+message(STATUS "===================== ulog module end ================\n")

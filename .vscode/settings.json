@@ -1,6 +1,9 @@
 {
     "files.associations": {
         "*.in": "cpp",
-        "ostream": "cpp"
-    }
+        "ostream": "cpp",
+        "stdlib.h": "c",
+        "iostream": "cpp"
+    },
+    "cmake.sourceDirectory": "D:/Files/GitFile/makefile_practice/ch0"
 }

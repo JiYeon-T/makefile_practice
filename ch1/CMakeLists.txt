@@ -14,7 +14,7 @@ message(STATUS "PROJECT_VERSION:${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 message(STATUS "c++ compiler version required:${CMAKE_CXX_STANDARD} version:${CMAKE_CXX_STANDARD_REQUIRED}")
-# 功能:输出 \r\n
+# 功能:输出 \r\n, 可以直接用 "\n" 代替
 message("")
 
 
@@ -23,10 +23,8 @@ message("")
 # 添加编译时间, 编译者变量
 set(${PROJECT_NAME}_COMPILE_DATE 20220611)
 set(${PROJECT_NAME}_COMPILE_AUTH JiYeon)
-message(STATUS "${PROJECT_NAME}_COMPILE_DATE：${${PROJECT_NAME}_COMPILE_DATE}")
-message(STATUS "${PROJECT_NAME}_COMPILE_AUTH:${${PROJECT_NAME}_COMPILE_AUTH}")
-message("")
-
+message(STATUS "${PROJECT_NAME}_COMPILE_DATE:${${PROJECT_NAME}_COMPILE_DATE}")
+message(STATUS "${PROJECT_NAME}_COMPILE_AUTH:${${PROJECT_NAME}_COMPILE_AUTH}\n")
 
 # configure_file 使用:
 # 通过头文件将版本号传递给源文件
@@ -74,32 +72,28 @@ message("CMAKE_LIBRARY_OUTPUT_DIRECTORY:${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
 message("CMAKE_RUNTIME_OUTPUT_DIRECTORY:${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 set(EXECUTABLE_OUT_PATH ${CMAKE_SOURCE_DIR}/build)
-message("EXECUTABLE_OUT_PATH:${EXECUTABLE_OUT_PATH}")
-message("")
+message("EXECUTABLE_OUT_PATH:${EXECUTABLE_OUT_PATH}\n")
 
 # version control
 message("PROJECT_VERSION_MAJOR:${PROJECT_VERSION_MAJOR}")
 message("PROJECT_VERSION_MINOR:${PROJECT_VERSION_MINOR}")
-message("PROJECT_VERSION_PATCH:${PROJECT_VERSION_PATCH}")
-message("")
+message("PROJECT_VERSION_PATCH:${PROJECT_VERSION_PATCH}\n")
 
 # 列表类型的变量, 该变量有多个值, 中间用 ; 分隔
 set(test_list_var This is a test list variable)
 message("test_list_var:${test_list_var}")
-message("CMAKE_SYSTEM_PROCESSOR:${CMAKE_SYSTEM_PROCESSORS}")
-message("")
+message("CMAKE_SYSTEM_PROCESSOR:${CMAKE_SYSTEM_PROCESSORS}\n")
 
 # 编译选项
-
 message("BUILD_SHARED_LIBS:${BUILD_SHARED_LIBS}")
 message("CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")
 message("CMAKE_CXX_FLAGS:${CMAKE_CXX_FLAGS}")
+
 # 设置编译选项
 set(CMAKE_C_FLAGS -g)
 set(CMAKE_CXX_FLAGS -g)
 message("after CMAKE_C_FLAGS:${CMAKE_C_FLAGS}")
-message("after CMAKE_CXX_FLAGS:${CMAKE_CXX_FLAGS}")
-message("")
+message("after CMAKE_CXX_FLAGS:${CMAKE_CXX_FLAGS}\n")
 
 
 # add directorectory
@@ -115,6 +109,10 @@ target_include_directories(${PROJECT_NAME}_bin PUBLIC
                            ${PROJECT_BINARY_DIR}
 )
 
+# 多行注释
+#[[
+abc
+]]
 
 # cmake --help 可以选择不同的参数 以及不同平台的编译工具
 # cmake -G "Unix Makefiles" ../

@@ -1,6 +1,7 @@
 #include <iostream>
-#include "third_party/math/math_test.h""
-#include "third_party/ulog/ulog_test.h"
+
+#include "math_test.h""
+#include "ulog_test.h"
 
 
 using namespace std;

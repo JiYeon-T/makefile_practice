@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.23.0)
 project("sub")
 
-message("")
-message(STATUS "CMakeExpSub")
+message(STATUS "\n\nCMakeExpSub")
 
 # default on
 option(TEST_OPTION "test option" OFF)

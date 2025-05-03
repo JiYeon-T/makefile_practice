@@ -7,8 +7,36 @@ TODO:
 2. 在这个仓库, 创建一个用于学习 shell 的分支;
 
 
-
 cmake 是一个跨平台、开源的构建系统。它是一个集软件构建、测试、打包于一身的软件。它使用与平台和编译器独立的配置文件来对软件编译过程进行控制。
+
+
+
+# TODO:
+
+cmake 学习:
+cmake 官方文档:
+https://cmake.org/cmake/help/latest/command/add_library.html#command:add_library
+https://cmake.org/cmake/help/latest/index.html#
+https://cmake.org/cmake/help/latest/module/ExternalProject.html
+
+
+
+##### 0. cmake
+
+- 在Android Studio2.2和以上版本，构建原生库的默认 工具 是CMake。
+- CMake 是一个跨平台的构建工具，可以使用简洁的语句来描述所有平台的安装(编译过程)。能够输出各种各样的makefile或者 project 文件(**也可以生成其他格式的编译脚本**)。CMake 并不直接构建出最终的软件，而是产生其他工具脚本比如: makefile，然后在依据这个工具的构建方式使用。
+- CMake 是一个比 make 更高级的编译配置工具，它可以根据不同的平台，不同的编译器，生成相应的 makefile 或者 vcproj 项目，从而达到跨平台的目的。
+  **Android Studio** 利用 CMake 生成的是 **ninja**。ninja 是一个小型的关注速度的构建系统。我们一般不需要关心 ninja 的脚本，只需要知道怎么配置CMake就行了。
+- CMake是一个跨平台的支持产出各种不同的构建建脚本的一个工具。
+
+##### b.cmake 源文件
+
+- CMake 源文件包含命令、注释、空格和换行
+-  CMakeLists.txt 命名或者以 .cmake 为扩展名
+- 可以通过 add_subdirectory() 命令把子目录（子模块）的 CMake 源文件添加进来
+- CMake源文件中所有有效的语句都是命令，可以是内置命令或者自定义的函数或宏命令。
+
+
 
 ##### 1.windows下没有生成可执行文件的解决方法:
 
@@ -57,7 +85,7 @@ message("This is a cmakelists test project") # 打印
 
 # 打印一些常见 CMakeLists 内置变量(预定义变量)
 message("PROJECT_SOURCE_DIR = ${PROJECT_SOURCE_DIR}") # 源文件路径, 工程的根目录有
-message("PEROJECT_BINARY_DIR = ${PEROJECT_BINARY_DIR}") # 输出路径，运行 cmake 命令的目录，通常是 ${PROJECT_SOURCE_DIR}/build
+message("PROJECT_BINARY_DIR = ${PROJECT_BINARY_DIR}") # 输出路径，运行 cmake 命令的目录，通常是 ${PROJECT_SOURCE_DIR}/build
 message(${PROJECT_NAME})
 message("CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}") # 当前处理的 CMakeLists.txt 所在的路径
 message("4.CMAKE_CURRRENT_BINARY_DIR = ${CMAKE_CURRRENT_BINARY_DIR}") # 当前编译生成的文件存放目录
@@ -86,8 +114,6 @@ message("21.CMAKE_SYSTEM_PROCESSOR   = ${CMAKE_SYSTEM_PROCESSOR}")
 
 **设置编译类型**
 
-**动态库与静态库有什么区别？？？**
-
 ```cmake
 add_executable(demo demo.cpp) # 由源码生成可执行文件
 add_library(common STATIC util.cpp)	# 生成静态库
@@ -114,12 +140,15 @@ common.dll
 
 **指定编译需要包含的源文件**
 
-add_library(demo demo.cpp test.cpp util.cpp)
+```cmake
+# 要生成的库文件名称:demo_lib
+add_library(demo_lib demo.cpp test.cpp util.cpp)
+```
 
 - aux_source_directory(DIRECTORY  VARIABLE)
-- 发现目录 DIRECTORY   下所有源文件并将列表保存在变量 VARIABLE 中
 
 ```cmake
+# 发现目录 DIRECTORY   下所有源文件并将列表保存在变量 VARIABLE 中
 aux_source_directory(. SRC_LIST) # 搜索当前目录下的所有 .cpp 文件
 add_library(demo $(SRC_LIST)) # 生成静态库
 ```
@@ -144,7 +173,7 @@ add_library(demo $(SRC_LIST) $(SRC_PROTOCOL_LIST))
 
 
 
-##### 多文件编译方法，不适用库的方式
+##### 多文件编译方法，不使用库的方式
 
 **直接将 .c 文件与 .cpp 文件一起进行编译，编译可以通过，但是链接会提示找不到定义，这地方还需要再研究研究**
 
@@ -157,15 +186,11 @@ add_executable(${RPOJECt_NAME} main.cpp ${SRC_LIST})
 
 
 
-
-
-
-
 **查找系统指定的库文件**
 
 find_libray(VARIABLE  NAME  PATH)
 
-查找到指定的预编译库，并将他的路径保存在变量中，默认路径是系统包含的系统库，因此如果是NDK的公共库则只需要指定库的 name 即可。l
+查找到指定的预编译库，并将他的路径保存在变量中，默认路径是系统包含的系统库，因此如果是NDK的公共库则只需要指定库的 name 即可。
 
 ```Cmake
 find_library(LOG_LIB # 查找到的库的名字保存到变量 LOG_LIB
@@ -178,6 +203,7 @@ find_library(LOG_LIB # 查找到的库的名字保存到变量 LOG_LIB
 **设置包含的路径**
 
 ```cmake
+# 设置库头文件:
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_BINARY_DIR}
@@ -385,9 +411,9 @@ NOT, AND, OR
 
 - bool 常量值
 
-| 类型  | 值                                                           |
-| ----- | ------------------------------------------------------------ |
-| true  | 1,ON,YES,TRUE,Y,非0的值                                      |
+| 类型    | 值                                        |
+| ----- | ---------------------------------------- |
+| true  | 1,ON,YES,TRUE,Y,非0的值                     |
 | false | 0,OFF,FALSE,N,IGNORE,NOTFOUUND,空字符串，以-NOTFOUND结尾的字符串 |
 
 - 数字比较
