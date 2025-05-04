@@ -6,8 +6,11 @@ TODO:
 2. 代码重新拉一份, 把 7_compile_c_cpp/1/main.c add.cpp 重新拷贝一份, 然后再提交
 3. ch13
 4. c/cpp compile tool chain
+5. 研究完 FreeRTOS 后再研究一下 nuttx & Linux 实现； 
 
-
+##### 0. 分支结构
+main - makefile
+CMakeLists - cmake
 
 
 **1.Makefile 中尽量不要写空格，免得带来不必要的麻烦**
