@@ -1,0 +1,33 @@
+########################## 依赖文件 ############################
+CC = gcc
+Q = @
+CFLAGS := -g
+CXXFLAGS :=
+TARGET = edit
+
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+$(TARGET): $(objs)
+	$(CC) -o $(TARGET) $(objs)
+
+#GNU建议把编译器为每个源文件推导出的依赖关系放到一个单独的文件,
+#gcc -M main.c  #gcc自动推导出文件依赖
+#gcc -MM main.c
+
+%.d: %.c
+	$(Q)set -e
+	$(Q)rm -f $@
+	$(Q)$(CC) -M $(CPPFLAGS) $< > $@.$$$$
+	sed 's,\($*\)\.o[ :]*,\1.o $@:, g' < $@.$$$$ > $@
+	$(Q)rm -f $@.$$$$
+
+
+.PHONY: clean
+
+clean:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -f $(objs)
+	$(Q)rm -f $(TARGET)
+

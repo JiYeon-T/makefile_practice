@@ -1,0 +1,119 @@
+######################### 变量 ############################
+
+
+
+export CC = gcc
+export Q = @
+export CFLAGS := -g
+export CXXFLAGS :=
+MAKE :=
+MAKEFLAGS += --print-directory
+TARGET = edit
+
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+
+#系统变量MAKELEVEL:定义的是嵌套使用makefile的层数
+ifeq (0, $(MAKELEVEL))
+cur-dir := $(shell pwd)
+whoami := $(shell whoami)
+host-type := $(shell arch)
+MAKE := $(MAKE) host-type=$(host-type) whoami=$(whoami)
+endif
+
+#定义目标变量,会覆盖MAKEFILE定义的全局变量值
+$(TARGET): CFLAGS := -Wall
+$(TARGET): $(objs)
+	$(Q)echo "CFLAGS:$(CFLAGS)"
+	$(CC) $(CFLAGS) -o $(TARGET) $(objs)
+
+print:
+	$(Q)echo "$(MAKELEVEL)"
+	$(Q)echo "$(cur-dir)"
+	$(Q)echo "$(whoami)"
+	$(Q)echo "$(host-type)"
+
+
+########################## 变量测试 ##########################
+foo := a.o b.o c.o
+#将$foo中的所有.o字串替换成.c字串
+bar := $(foo:.o=.c)
+#静态模式替换:
+foo2 := $(foo:%.o=%.c)
+var:
+	$(Q)echo "foo:$(foo)"
+	$(Q)echo "bar:$(bar)"
+	$(Q)echo "foo2:$(foo2)"
+
+
+#在使用的时候展开，效果和C语言中的宏类似
+first_second = HELLO
+a = first
+b = second
+var2:
+	$(Q)echo "$(a)_$(b)"
+	$(Q)echo "$($(a)_$(b))"
+
+
+#函数和条件语句一同使用
+#,TODO:为什么没有生效?
+bar := a b c y z x
+do_sort := 1
+ifdef do_sort
+func := sort
+else
+func := strip
+endif
+foo := $($(func) $(bar))
+var3:
+	$(Q)echo "func:$(func)"
+	$(Q)echo "bar:$(bar)"
+	$(Q)echo "foo:$(foo)"
+
+
+#变量也可以出现在操作符左边
+dir = foo
+$(dir)_sources := $(wildcard $(dir)/*.c)
+define $(dir)_print
+lpr $($(dir)_sources)
+endef
+
+
+#追加赋值
+bar += def
+#等价于:
+bar := $(bar) def
+
+
+#环境变量,自动传递到嵌套Makefile中,不需要使用export关键字,例如:$(CFLAGS)
+
+#目标变量
+
+
+#模式变量,会覆盖MAKEFILE定义的全局变量值
+#定义的模式变量仅在文件匹配模式%.o时有效
+%.o: CFLAGS:= -Werror
+var4:
+	$(Q)echo "CFLAGS:$(CFLAGS)"
+#这里 CFLAGS 打印 -g,打印的是环境变量CFLAGS,而不是模式变量
+
+
+########################## 条件判断测试 ##########################
+libs_for_gcc = -lgnu
+normal_libs =
+foo: $(objects)
+	ifeq ($(CC), gcc)
+	$(CC) -o foo $(objects) $(libs_for_gcc)
+	else
+	$(CC) -o foo $(objects) $(libs_for_gcc)
+	endif
+
+.PHONY: clean
+
+clean:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -f $(objs)
+	$(Q)rm -f $(TARGET)
+

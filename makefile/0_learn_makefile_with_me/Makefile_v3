@@ -1,0 +1,22 @@
+################################### Makefile 隐晦规则 #############################
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+edit: $(objs)
+	cc -o edit $(objs)
+
+#make看到.o文件会自动使用对应的.c文件进行编译,即 gcc -c -o xxx.o xxx.c
+main.o:main.c defs.h
+kbd.o:kbd.c defs.h command.h 
+command.o:command.c defs.h command.h
+display.o:display.c defs.h buffer.h
+insert.o:insert.c defs.h buffer.h
+search.o:search.c defs.h buffer.h 
+files.o:files.c defs.h buffer.h command.h
+utils.o:utils.c defs.h
+
+clean:
+	rm -f edit 
+	rm -rf $(objs)
+

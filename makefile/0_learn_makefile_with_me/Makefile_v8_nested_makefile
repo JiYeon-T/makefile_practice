@@ -1,0 +1,55 @@
+########################## 子目录中的makefile ############################
+
+#TODO:
+#子Makefile执行是不是至少有两个方案:
+#1.进入子目录中直接执行Makefile
+#2.通过子目录中的Makefile手机源文件到SRCS变量中
+
+
+#export表示变量需要传递到下级makefile中
+export CC = gcc
+export Q = @
+export CFLAGS := -g
+export CXXFLAGS :=
+#Makefile的系统变量,默认是会传递到子Makefile中的
+MAKE :=
+MAKEFLAGS += --print-directory
+TARGET = edit
+
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+$(TARGET): $(objs)
+	$(CC) -o $(TARGET) $(objs)
+
+#子目录
+subtest:
+	cd subtest && $(MAKE)
+
+
+print:
+	$(Q)echo $(MAKE)
+	$(Q)echo $(MAKEFLAGS)
+
+
+########################## 命令包 ############################
+
+#定义命令包
+define run-yacc
+	$(Q)echo "command packet"
+	#yacc $(firstword $^)
+	#mv y.tab.c $@
+endef
+
+cmd:
+	$(run-yacc)
+
+
+.PHONY: clean
+
+clean:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -f $(objs)
+	$(Q)rm -f $(TARGET)
+

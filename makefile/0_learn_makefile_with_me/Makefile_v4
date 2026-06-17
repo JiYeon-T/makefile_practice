@@ -1,0 +1,20 @@
+####################### 并不推荐的写法 ##########################
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+edit: $(objs)
+	cc -o edit $(objs)
+
+#使用自动推导的规则,多个目标依赖同一个文件
+$(objs): defs.h
+kbd.o command.o files.o: command.h
+display.o insert.o search.o files.o:buffer.h
+
+
+#伪目标
+.PHONY: clean
+
+clean:
+	-rm -f edit 
+	-rm -rf $(objs)
+

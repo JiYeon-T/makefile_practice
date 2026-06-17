@@ -1,0 +1,62 @@
+########################## 条件判断测试 ##########################
+
+
+export CC = gcc
+export Q = @
+export CFLAGS := -g
+export CXXFLAGS :=
+MAKE :=
+MAKEFLAGS += --print-directory
+TARGET = edit
+
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+#$(TARGET): $(objs)
+#$(Q)echo "CFLAGS:$(CFLAGS)"
+#$(CC) $(CFLAGS) -o $(TARGET) $(objs)
+
+
+libs_for_gcc = -lrt
+normal_libs =
+
+#条件判断,在生成可执行文件的规则中,ifeq,ifneq,ifdef,ifndef不能TAB开头,否则会被当作命令
+foo: $(objs)
+ifeq ($(CC), gcc)
+	$(CC) -o foo $(objs) $(libs_for_gcc)
+else
+	$(CC) -o foo $(objs) $(libs_for_gcc)
+endif
+
+#第二种写法
+libs =
+ifeq ($(CC), gcc)
+	libs = $(libs_for_gcc)
+else
+	libs = $(normal_libs)
+endif
+
+foo2: $(objs)
+	$(CC) -o foo2 $(objs) $(libs)
+
+
+#ifdef仅判断变量是否有值,而不在当前位置展开变量
+ifdef var_test
+defined := 1
+else
+defined := 0
+endif
+
+condition:
+	$(Q)echo "defined:$(defined)"
+
+
+
+.PHONY: clean
+
+clean:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -f $(objs)
+	$(Q)rm -f $(TARGET)
+

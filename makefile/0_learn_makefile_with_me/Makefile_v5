@@ -1,0 +1,53 @@
+############################# 借助伪目标一次make生成 ##########################
+CC=gcc
+Q=@
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+VPATH= src:subtest
+
+#借助伪目标,一次生成多个可执行文件
+all: prog1 prog2 prog3
+.PNONY: all
+
+
+prog1: $(objs)
+	cc -o prog1 $(objs)
+
+prog2: $(objs)
+	cc -o prog2 $(objs)
+
+prog3: $(objs)
+	cc -o prog3 $(objs)
+
+
+main.o:main.c defs.h
+kbd.o:kbd.c defs.h command.h 
+command.o:command.c defs.h command.h
+display.o:display.c defs.h buffer.h
+insert.o:insert.c defs.h buffer.h
+search.o:search.c defs.h buffer.h 
+files.o:files.c defs.h buffer.h command.h
+utils.o:utils.c defs.h
+
+
+#使用.PHONY来显式指定一个伪目标,不管是否有clean这个文件,都要运行clean这个目标
+.PHONY: cleanall cleanobj cleandiff
+
+#类似与子程序:cleanobj, cleandiff
+cleanall: cleanobj cleandiff
+	$(Q)echo "clean all"
+	$(Q)rm -f prog1
+	$(Q)rm -f prog2
+	$(Q)rm -f prog3
+
+cleandiff:
+	$(Q)echo "clean diff"
+	$(Q)rm -f *.ff
+
+cleanobj:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -rf $(objs)
+
+

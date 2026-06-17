@@ -1,0 +1,44 @@
+########################## 静态模式 ############################
+CC = gcc
+Q = @
+CFLAGS := -g
+CXXFLAGS :=
+TARGET = edit
+
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+$(TARGET): $(objs)
+	$(CC) -o $(TARGET) $(objs)
+
+#all: $(objs)
+
+#静态模式可以定义多目标的生成规则,这里指每一个$objs中的.o文件都依赖于同名的.c文件
+#自动化变量:
+#$< 表示所有的依赖集合,这里就是所有的.c文件
+#$@ 表示所有的目标集合,这里就是 $(objs)
+#$(objs): %.o: %.c
+#$(CC) -c $(CFLAGS) $< -o $@
+#$(Q)echo "@:$@"
+#$(Q)echo "<:$<"
+
+
+files = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+#使用makfile中的过滤函数实现
+$(filter %.o, $(files)): %.o: %.c
+	$(CC) -c $(CFLAGS) -o $@ $<
+
+$(filter %.elc, $(files)): %.elc: %.el
+	emacs -f batch-byte-compile $<
+
+
+.PHONY: clean
+
+clean:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -f $(objs)
+	$(Q)rm -f $(TARGET)
+
