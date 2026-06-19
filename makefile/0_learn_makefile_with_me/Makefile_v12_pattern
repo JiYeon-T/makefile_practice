@@ -1,0 +1,67 @@
+########################## 隐含规则 ##########################
+export CC = gcc
+export Q = @
+export CFLAGS := -g
+export CXXFLAGS :=
+MAKE :=
+MAKEFLAGS += --print-directory
+TARGET = edit
+
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+$(TARGET): $(objs)
+	$(Q)echo "CFLAGS:$(CFLAGS)"
+	$(CC) $(CFLAGS) -o $(TARGET) $(objs)
+
+
+#MAKECMDGOALS环境变量存储make指定的终极目标列表
+#例:只要输入的命令不是make clean,这里都会自动包含foo.d和bar.d这两个Makefile
+sources:= foo.c bar.c
+ifneq ($(MAKECMDGOALS),clean)
+#include $(sources:.c=.d)
+-include $(sources:.c=.d)
+endif
+
+#隐含规则中涉及到的部分系统变量,仅仅是系统定义值,可以修改.方法:1.环境变量;2.make参数;3.Makefile文件内修改
+vars:
+	$(Q)echo "RM:$(RM)"
+	$(Q)echo "函数库打包程序AR的参数:$(ARFLAGS)"
+	$(Q)echo "汇编语言参数:$(ASFLAGS)"
+	$(Q)echo "C:$(CFLAGS)"
+	$(Q)echo "C++:$(CXXFLAGS)"
+	$(Q)echo "C语言预处理器参数(不是cpp):$(CPPFLAGS)"
+	
+
+#隐含规则中涉及到的部分系统变量
+rules:
+	$(Q)echo "C:$(CC) -c $(CPPFLAGS) $(CFLAGS)"
+	$(Q)echo "C++:$(CXX) -c $(CPPFLAGS) $(cFLAGS)"
+	$(Q)echo "asmble:$(AS) $(ASFLAGS)"
+	$(Q)echo "preprocess:$(AS) $(ASFLAGS)"
+	$(Q)echo "link objects:$(CC) $(LDFLAGS) xxx.o $(LOADLIBES) $(LDLIBS)"
+
+
+
+########################## 模式规则 ##########################
+#自定义模式规则
+#%.o:%.c
+#$<自动化变量表示依赖中的每一个
+#$(Q)echo "compiling $<"
+#$(CC) -c $(CFlAGS) $(CPPFLAGS) $< -o $@
+
+#最好给自动化变量也加上括号,便于理解
+%.o:%.c
+	$(CC) -c $(CFlAGS) $(CPPFLAGS) $(<) -o $(@)
+
+
+
+
+.PHONY: clean
+
+clean:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -f $(objs)
+	$(Q)rm -f $(TARGET)
+

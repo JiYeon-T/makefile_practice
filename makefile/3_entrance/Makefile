@@ -1,4 +1,4 @@
-# make寻找第一个目标文件作为最终的目标文件
+# make中的第一个目标作为最终的目标
 # 注释要顶格写， 不可以Tab
 # 执行的命令前必须用 TAB
 
@@ -37,6 +37,7 @@ $(TARGET):$(OBJS)
 
 
 .PHONY:clean
+
 clean:
 	-rm -rf $(TARGET) $(OBJS)
 

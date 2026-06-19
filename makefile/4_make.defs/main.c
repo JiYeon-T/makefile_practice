@@ -17,10 +17,15 @@ int main(int argc, char * argv[])
     }
     printf("Hello, world\r\n");
 
-    // common_test(argv[0]);
-    print_module1_1_info(NULL);
+    common_test(argv[0]);
+    
+	print_module1_1_info(NULL);
     print_module1_2_info(NULL);
     print_module1_3_info(NULL);
+
+	module2_print_info();
+
+	module3_print_info();
 
     return 0;
 }

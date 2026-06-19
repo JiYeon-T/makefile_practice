@@ -1,11 +1,11 @@
 #都在同一个文件夹下, 所以也不需要添加路径
-mytool:main.o tool1.o tool2.o
-	@#可执行文件
+mytool: main.o tool1.o tool2.o
+#@#可执行文件
 	gcc main.o tool1.o tool2.o -o mytool 	
-	@#可执行文件
-	@#可执行文件
+#@#可执行文件
+#@#可执行文件
 CC=abc
-#CC是系统变量, 默认是==gcc的, 所以 ?= 不执行
+#CC是系统变量, 默认是等于cc的, 所以?=不执行
 CC?=abc	
 GG?=zzz
 CC+=abcdef
@@ -30,6 +30,7 @@ CC+=abcdef
 #	#@#变量$(RM)相当于rm -f
 #	$(RM) *.o mytool -r
 
+
 ############# 2.可以定义变量 ####################################
 #OBJS=main.o tool1.o tool2.o
 #CC=gcc		# CC在makefile中的默认值就是GCC，这里只是为了说明定义变量
@@ -53,7 +54,8 @@ CC+=abcdef
 #	@#变量$(RM)相当于rm -f
 #	$(RM) *.o mytool -r
 
-############ 3.使用一些组合进行替换 ############################
+
+############ 3.使用自动变量替换 ############################
 # OBJS=main.o tool1.o tool2.o
 # CC=gcc		# CC在makefile中的默认值就是GCC，这里只是为了说明定义变量
 # CFLAGS+=-c -Wall -g	# Compile Flags 可以使用+=
@@ -79,7 +81,8 @@ CC+=abcdef
 # 	@#变量$(RM)相当于rm -f
 # 	@$(RM) *.o mytool -r
 
-############ 4.再进行简化 #####################################
+
+############ 4.通过模式规则简化 #####################################
 #OBJS=main.o tool1.o tool2.o
 #CC=gcc		
 #CFLAGS+=-c -Wall -g	

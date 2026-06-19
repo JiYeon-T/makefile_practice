@@ -7,9 +7,21 @@ TODO:
 2. 代码重新拉一份, 把 7_compile_c_cpp/1/main.c add.cpp 重新拷贝一份, 然后再提交
 3. ch13
 4. c/cpp compile tool chain
-5. 研究完 FreeRTOS 后再研究一下 nuttx & Linux 实现； 
+5. 研究完 FreeRTOS 后再研究一下 nuttx & Linux Makefile 实现； 
+
+4_make.defs 
+
+DEP 文件怎么使用的？
+
+`gcc -MM` ?????????????????????
 
 
+
+6. shell:
+
+- sed
+- awk
+- grep
 
 
 
@@ -133,9 +145,11 @@ first_make:first_make.cpp xdata.cpp
 -Werror # 警告错误对待, 会导致编译报错
 ```
 
-查看 gcc 的工作流程:预处理 -> 编译 -> 汇编 -> 链接
 
-例子:`./compile_process`
+
+- gcc 的工作流程:预处理 -> 编译 -> 汇编 -> 链接
+
+例子所在位置:`./compile_process`
 
 ```shell
 # 预处理 -E, 添加头文件进来, 替换宏定义等
@@ -632,7 +646,7 @@ exec:
 
 
 
-##### 13.文件指示
+##### 13. 文件指示
 
 其包括了三个部分，
 
@@ -652,9 +666,9 @@ include $(TOPDIR)/comm/comm.mk
 
 Makefile中只有行注释
 
-**注释必须顶格??????????**
+**注释必须顶格!!!!!!!!!!!!!**
 
-**在Makefile中的命令，必须要以[Tab]键开始。**
+**在 Makefile 中的 SHELL 命令，必须要以[Tab]键开始!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!**
 
 ```makefile
 #first_make
@@ -1590,14 +1604,23 @@ rm -f bar.o
 ##### 21. Makefile 调试
 
 ```shell
+make --help  # 查看选项
 make --trace  # trace
 make --just-print  # 只显示 shell 命令但不会执行
+make -p, --print-data-base  # 输出 makefile 中的所有数据,可以看到每一个 shell 或变量来自于哪个 makefile 文件以及哪一行,方便调试
+make -q  # 不运行命令,也不输出. 仅仅检查所指定的目标是否需要更新
+make -p -q  # 如果只是想输出 makefile 信息,而不执行 makefile
+make -B  # 重新编译所有文件
+make --debug=a  # 输出所有日志,控制 makefile 日志输出等级
+# -w, --print-directory       Print the current directory.  进出文件夹打印目录,
+#e.g.
+make -w -p --debug=a > compile.log
 ```
 
 
 
 ##### 22. C&C++ 混合编程&编译
 
-参考：`./compile_c_cpp`
+例子所在位置：`./compile_c_cpp`
 
 # TODO

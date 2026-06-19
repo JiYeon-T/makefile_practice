@@ -1,0 +1,6 @@
+SRCS += common.c
+SRCS += sysmanager.c
+
+DEPPATH += --dep-path $(TOP_DIR)/src
+VPATH += :$(TOP_DIR)/src
+CFLAGS += -I$(TOP_DIR)/src

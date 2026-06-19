@@ -1,0 +1,219 @@
+########################## 函数 ##########################
+export CC = gcc
+export Q = @
+export CFLAGS := -g
+export CXXFLAGS :=
+MAKE :=
+MAKEFLAGS += --print-directory
+TARGET = edit
+
+
+objs = main.o kbd.o command.o display.o \
+			insert.o search.o files.o utils.o
+
+$(TARGET): $(objs)
+	$(Q)echo "CFLAGS:$(CFLAGS)"
+	$(CC) $(CFLAGS) -o $(TARGET) $(objs)
+
+
+######################## 字符串处理函数 #################
+comma:=,
+empty:=
+space:= $(empty) $(empty)
+foo:= a b c
+#将字符串foo中的space全都替换成comma,等价于前面变量章节讲过的:$(bar: ,,)
+bar:= $(subst $(space),$(comma),$(foo))
+fun:
+	$(Q)echo "bar:$(bar)"
+
+#替换函数
+#Makefile中不要随便添加空格,EE前添加空格就从'EE'变成了' EE'
+fun_subst:
+	$(Q)echo $(subst ee,EE,feet on the street)
+
+#模式替换
+fun_patsubst:
+	$(Q)echo $(patsubst %.c,%.o,x.c    c.c bar.c)
+	$(Q)echo $(patsubst %.c,%.o,x.c.c.c bar.c)
+
+#去空格函数
+fun_strip:
+	$(Q)echo $(strip "   a b c  ")
+	$(Q)echo $(strip   a b c  )
+
+#查找字符串
+fun_findstring:
+	$(Q)echo $(findstring a,a b c)
+	$(Q)echo $(findstring a, b c)
+
+#过滤函数
+#按照pattern过滤字符串中的单词,保留符合pattern的单词,可以有多个模式
+sources:=foo.c bar.c baz.s ugh.h foo.c
+fun_filter:
+	$(Q)echo $(filter %.c %.s,$(sources))
+	$(Q)echo $(filter %.s,$(sources))
+
+#反过滤函数
+#符合pattern的去除,不符合的返回
+fun_filter_out:
+	$(Q)echo $(filter-out %.c,$(sources))
+	$(Q)echo $(filter-out %.s,$(sources))
+
+#排序函数(升序)
+#sort函数会删除list中重复的单词
+fun_sort:
+	$(Q)echo $(sort $(sources))
+
+#取单词函数
+#返回text中第n个单词;下标从1开始;如果没找到,返回空
+fun_word:
+	$(Q)echo $(word 2,$(sources))
+
+#取某个区间的单词返回;[start_index,end_index]
+fun_wordlist:
+	$(Q)echo $(wordlist 2,3,$(sources))
+
+#单词个数统计
+fun_words:
+	$(Q)echo "words num:$(words $(sources))"
+
+#返回text中的第1个单词
+fun_firstword:
+	$(Q)echo $(firstword $(sources))
+	$(Q)echo $(word 1,$(sources))
+
+#make使用VPATH变量来指定依赖文件的搜索路径,
+#于是我们可以利用这个搜索路径来指定编译器对头文件的搜索路径参数CFLAGS
+VPATH:= inc:src/inc:include:external/inc
+override CFLAGS += $(patsubst %,-I%,$(subst :, ,$(VPATH)))
+fun_test:
+	$(Q)echo $(CFLAGS)
+
+
+########################## 文件名操作函数 ##########################
+names:= src/foo.c hacks.c utils.h
+#从文件名中取目录函数
+fun_dir:
+	$(Q)echo $(dir $(names))
+
+#从文件名中取出文件名
+fun_notdir:
+	$(Q)echo $(notdir $(names))
+
+#从文件名中取出各个文件的后缀
+fun_suffix:
+	$(Q)echo $(suffix $(names))
+
+#从文件名中取出各个文件的前缀
+fun_basename:
+	$(Q)echo $(basename $(names))
+
+#加后缀
+fun_addsuffix:
+	$(Q)echo $(addsuffix .d,$(names))
+
+#加前缀
+fun_addprefix:
+	$(Q)echo $(addprefix src/,$(names))
+
+#连接函数
+fun_join:
+	$(Q)echo $(join aaa bbb,111 222 333)
+	$(Q)echo $(join aaa bbb,$(names))
+
+
+########################## 其他函数 ##########################
+names:= a b c d e f
+#遍历函数
+fun_foreach:
+	$(Q)echo $(foreach n,$(names),$(n).o)
+
+#if判断
+fun_if:
+	$(Q)echo $(if $(names),$(addsuffix .c,$(names)),)
+
+#call,向表达式传递参数
+sequence=$(1) $(2)
+reverse=$(2) $(1)
+fun_call:
+	$(Q)echo $(call sequence,a,b)
+	$(Q)echo $(call reverse,a,b)
+
+#不修改变量,而是告诉你变量是哪里来的
+fun_origin:
+	$(Q)echo $(origin names)
+	$(Q)echo $(origin CC)
+	$(Q)echo $(origin unexist)
+
+#如果bletch变量来自于环境,就将其重定义
+ifdef bletch
+ifeq "$(origin bletch)" "enviroment"
+bletch:=barf, gag, etc.
+endif
+endif
+
+#shell函数
+#TODO:打印不出 txt,但是使用make --trace fun_shell可以打印出来
+txt:= $(shell cat Makefile)
+fun_shell:
+	$(Q)echo $(txt)
+	$(Q)echo $(shell ls *.c)
+#$(Q)echo $(shell ls -l)
+
+
+########################## make控制函数 ##########################
+ERROR:=
+
+#产生致命错误
+ifdef ERROR
+$(error "error is $(names)")
+endif
+
+#产生警告,不终止make
+$(warning "warning is $(names)")
+
+
+
+########################## 自定义函数 ############################
+#param1:list
+define fun_addsuffix
+$(foreach n,$(1),$(addsuffix .d,$(n)))
+endef
+
+names = a.c b.c c.c
+final_names = $(call fun_addsuffix,$(names))
+
+fun_test:
+	$(Q)echo $(names)
+	$(Q)echo $(final_names)
+
+
+#param1:directory name
+define traverse_dir
+names:= $(shell ls -a $(1))
+endef
+
+files:= $(call traverse_dir,$(shell pwd))
+
+fun_test2:
+	$(Q)echo $(files)
+
+
+define get_git_branch
+$(shell git rev-parse --abbrev-ref HEAD)
+endef
+
+BRANCH:= $(call get_git_branch)
+
+fun_test3:
+	$(Q)echo "git branch:$(BRANCH)"
+
+
+
+.PHONY: clean
+
+clean:
+	$(Q)echo "clean objs:$(objs)"
+	$(Q)rm -f $(objs)
+	$(Q)rm -f $(TARGET)
+
